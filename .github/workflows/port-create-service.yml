@@ -21,13 +21,10 @@ jobs:
       ORG_NAME: amitl-port
     steps:
       - uses: actions/checkout@v4
-      - name: Debug port_context
-        run: echo '${{ inputs.port_context }}' | jq .
 
-      - name: Extract inputs from port_context
+      - name: Extract runId from port_context
         run: |
           echo "PORT_RUN_ID=$(echo '${{ inputs.port_context }}' | jq -r .runId)" >> $GITHUB_ENV
-          echo "SERVICE_NAME=$(echo '${{ inputs.port_context }}' | jq -r '.payload.properties.service_name')" >> $GITHUB_ENV
 
       - name: Create a log message
         uses: port-labs/port-github-action@v1
@@ -37,7 +34,7 @@ jobs:
           baseUrl: https://api.port.io
           operation: PATCH_RUN
           runId: ${{ env.PORT_RUN_ID }}
-          logMessage: "Starting scaffolding of service and repository: ${{ env.SERVICE_NAME }}"
+          logMessage: "Starting scaffolding of service and repository: ${{ inputs.service_name }}"
 
       - name: Create GitHub Repository
         uses: port-labs/cookiecutter-gha@v1.1.1
@@ -46,8 +43,8 @@ jobs:
           portClientSecret: ${{ secrets.PORT_CLIENT_SECRET }}
           token: ${{ secrets.ORG_ADMIN_TOKEN }}
           portRunId: ${{ env.PORT_RUN_ID }}
-          repositoryName: ${{ env.SERVICE_NAME }}
-          portUserInputs: '{"app_name": "${{ env.SERVICE_NAME }}"}'
+          repositoryName: ${{ inputs.service_name }}
+          portUserInputs: '{"app_name": "${{ inputs.service_name }}"}'
           cookiecutterTemplate: https://github.com/lacion/cookiecutter-golang
           blueprintIdentifier: "githubRepository"
           organizationName: ${{ env.ORG_NAME }}
@@ -60,12 +57,12 @@ jobs:
           clientSecret: ${{ secrets.PORT_CLIENT_SECRET }}
           baseUrl: https://api.port.io
           operation: UPSERT
-          identifier: "${{ env.SERVICE_NAME }}_service"
-          title: "${{ env.SERVICE_NAME }} Service"
+          identifier: "${{ inputs.service_name }}_service"
+          title: "${{ inputs.service_name }} Service"
           blueprint: "service"
           relations: |
             {
-              "repository": "${{ env.ORG_NAME }}/${{ env.SERVICE_NAME }}"
+              "repository": "${{ env.ORG_NAME }}/${{ inputs.service_name }}"
             }
 
       - name: Create a log message
@@ -76,7 +73,7 @@ jobs:
           baseUrl: https://api.port.io
           operation: PATCH_RUN
           runId: ${{ env.PORT_RUN_ID }}
-          logMessage: "Finished scaffolding of service and repository: ${{ env.SERVICE_NAME }}"
+          logMessage: "Finished scaffolding of service and repository: ${{ inputs.service_name }}"
 
       - name: Report action status to Port
         uses: port-labs/port-github-action@v1
