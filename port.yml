@@ -1,17 +1,10 @@
-- kind: repository
-  selector:
-    query: 'true'
-    includedFiles:
-      - port.yml
-  port:
-    entity:
-      mappings:
-        identifier: .name
-        title: .name
-        blueprint: '"service"'
-        properties:
-          url: .html_url
-          defaultBranch: .default_branch
-        relations:
-          organization: .owner.login
-          repository: .name
+- identifier: payment
+  title: Payment
+  blueprint: domain
+  properties:
+    architecture: https://lucid.app/documents/embedded/c3d64493-a5fe-4b18-98d5-66d355080de3
+- identifier: shipping
+  title: Shipping
+  blueprint: domain
+  properties:
+    architecture: https://lucid.app/documents/embedded/c3d64493-a5fe-4b18-98d5-66d355080de3
