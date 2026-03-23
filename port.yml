@@ -1,0 +1,17 @@
+- kind: repository
+  selector:
+    query: 'true'
+    includedFiles:
+      - port.yml
+  port:
+    entity:
+      mappings:
+        identifier: .name
+        title: .name
+        blueprint: '"service"'
+        properties:
+          url: .html_url
+          defaultBranch: .default_branch
+        relations:
+          organization: .owner.login
+          repository: .name
