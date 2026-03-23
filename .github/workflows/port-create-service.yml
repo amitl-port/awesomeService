@@ -21,6 +21,8 @@ jobs:
       ORG_NAME: amitl-port
     steps:
       - uses: actions/checkout@v4
+      - name: Debug port_context
+        run: echo '${{ inputs.port_context }}' | jq .
 
       - name: Extract inputs from port_context
         run: |
