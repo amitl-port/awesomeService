@@ -20,7 +20,7 @@ jobs:
   scaffold-service:
     runs-on: ubuntu-latest
     env:
-      ORG_NAME: amitl-port
+      ORG_NAME: amitl-port/awesomeService
 
     steps:
       - uses: actions/checkout@v4
